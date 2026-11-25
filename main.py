@@ -8,6 +8,7 @@ If Pillow is unavailable at runtime, falls back to copying the shipped
 entry.png that this program produced during development.
 """
 
+import hashlib
 import os
 import shutil
 import sys
@@ -35,7 +36,9 @@ def main():
             return 0
         raise
     page.save(out_path, format="PNG")
-    print("Wrote %s (%d bytes)" % (out_path, os.path.getsize(out_path)))
+    digest = hashlib.sha256(open(out_path, "rb").read()).hexdigest()
+    print("Wrote %s (%d bytes, sha256 %s)"
+          % (out_path, os.path.getsize(out_path), digest))
     return 0
 
 
